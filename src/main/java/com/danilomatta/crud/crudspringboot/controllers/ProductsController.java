@@ -59,4 +59,16 @@ public class ProductsController {
         BeanUtils.copyProperties(atualizarProductDTO, productEntityJPA);
         return ResponseEntity.status(HttpStatus.OK).body(productRepository.save(productEntityJPA));
     }
+
+    @DeleteMapping("deletar/{id}")
+    @Transactional
+    public ResponseEntity<String> deleteProduct(@PathVariable(value = "id") Long id){
+        Optional<ProductEntityJPA> optionalProductEntityJPA = productRepository.findById(id);
+        if(optionalProductEntityJPA.isEmpty()){
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado");
+        }
+
+        productRepository.delete(optionalProductEntityJPA.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Produto deletado com sucesso");
+    }
 }
